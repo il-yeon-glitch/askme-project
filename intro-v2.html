@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>컴공 3학년 자기소개</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f0f1a;
+      color: #e0e0e0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 배경 애니메이션 파티클 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 60% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── 헤더 / 프로필 ── */
+    .hero {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 48px 40px;
+      margin-bottom: 32px;
+      backdrop-filter: blur(12px);
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .avatar {
+      flex-shrink: 0;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.3), 0 8px 32px rgba(99,102,241,0.4);
+    }
+
+    .hero-text h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a5b4fc, #c4b5fd, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .hero-text .subtitle {
+      font-size: 1rem;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .badge {
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-purple { background: rgba(139,92,246,0.2); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.35); }
+    .badge-blue   { background: rgba(59,130,246,0.2);  color: #93c5fd; border: 1px solid rgba(59,130,246,0.35); }
+    .badge-green  { background: rgba(34,197,94,0.15);  color: #86efac; border: 1px solid rgba(34,197,94,0.3); }
+
+    /* ── 카드 그리드 ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 32px 28px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      animation: fadeUp 0.7s ease both;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(99,102,241,0.4);
+      box-shadow: 0 12px 40px rgba(99,102,241,0.15);
+    }
+
+    .card-full { grid-column: 1 / -1; }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card h2 .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      flex-shrink: 0;
+    }
+
+    .card p, .card li {
+      color: #94a3b8;
+      font-size: 0.92rem;
+      line-height: 1.75;
+    }
+
+    .card ul { list-style: none; padding: 0; }
+
+    .card ul li {
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .card ul li:last-child { border-bottom: none; }
+
+    .card ul li::before {
+      content: '▸';
+      color: #6366f1;
+      font-size: 0.8rem;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* 기술 스택 태그 */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      padding: 6px 16px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: rgba(99,102,241,0.12);
+      color: #a5b4fc;
+      border: 1px solid rgba(99,102,241,0.25);
+      transition: background 0.2s;
+    }
+
+    .tag:hover { background: rgba(99,102,241,0.25); }
+
+    /* 관심 분야 강조 카드 */
+    .interest-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .interest-item:last-child { border-bottom: none; }
+
+    .interest-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .i-purple { background: rgba(139,92,246,0.2); }
+    .i-blue   { background: rgba(59,130,246,0.2); }
+    .i-green  { background: rgba(34,197,94,0.15); }
+    .i-orange { background: rgba(251,146,60,0.15); }
+
+    .interest-info strong {
+      display: block;
+      color: #e2e8f0;
+      font-size: 0.95rem;
+      margin-bottom: 3px;
+    }
+
+    .interest-info span {
+      color: #64748b;
+      font-size: 0.83rem;
+      line-height: 1.5;
+    }
+
+    /* 연락처 */
+    .contact-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-github {
+      background: rgba(255,255,255,0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .btn-github:hover { background: rgba(255,255,255,0.14); }
+
+    .btn-email {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff;
+    }
+
+    .btn-email:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* 푸터 */
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: #334155;
+      font-size: 0.82rem;
+    }
+
+    /* 애니메이션 */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.18s; }
+    .card:nth-child(3) { animation-delay: 0.26s; }
+    .card:nth-child(4) { animation-delay: 0.34s; }
+
+    @media (max-width: 600px) {
+      .hero { flex-direction: column; text-align: center; padding: 36px 24px; }
+      .badges { justify-content: center; }
+      .grid { grid-template-columns: 1fr; }
+      .card-full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- 헤더 프로필 -->
+    <div class="hero">
+      <div class="avatar">👨‍💻</div>
+      <div class="hero-text">
+        <h1>김지민</h1>
+        <p class="subtitle">컴퓨터공학과 3학년 · 소프트웨어를 통해 세상을 바꾸고 싶은 개발자</p>
+        <div class="badges">
+          <span class="badge badge-purple">🎓 컴퓨터공학과</span>
+          <span class="badge badge-blue">📅 3학년</span>
+          <span class="badge badge-green">✅ 프로젝트 진행 중</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+
+      <!-- 전공 소개 -->
+      <div class="card">
+        <div class="card-icon">🖥️</div>
+        <h2><span class="dot"></span>전공 소개</h2>
+        <p>
+          컴퓨터공학과에서 알고리즘, 자료구조, 운영체제, 데이터베이스 등
+          소프트웨어 전반의 핵심 원리를 배우고 있습니다.<br><br>
+          이론과 실습을 병행하며 실제 문제를 해결하는 능력을 키우는 중입니다.
+          3학년이 되어 전공 심화 과목과 팀 프로젝트를 통해 성장하고 있습니다.
+        </p>
+      </div>
+
+      <!-- 수강 중인 주요 과목 -->
+      <div class="card">
+        <div class="card-icon">📚</div>
+        <h2><span class="dot"></span>주요 수강 과목</h2>
+        <ul>
+          <li>소프트웨어 공학</li>
+          <li>컴퓨터 네트워크</li>
+          <li>데이터베이스 설계</li>
+          <li>운영체제</li>
+          <li>머신러닝 개론</li>
+        </ul>
+      </div>
+
+      <!-- 기술 스택 -->
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h2><span class="dot"></span>기술 스택</h2>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">Java</span>
+          <span class="tag">C / C++</span>
+          <span class="tag">JavaScript</span>
+          <span class="tag">React</span>
+          <span class="tag">Node.js</span>
+          <span class="tag">SQL</span>
+          <span class="tag">Git</span>
+          <span class="tag">Linux</span>
+        </div>
+      </div>
+
+      <!-- 연락처 -->
+      <div class="card">
+        <div class="card-icon">📬</div>
+        <h2><span class="dot"></span>연락처</h2>
+        <p style="margin-bottom:18px;">협업 제안이나 질문은 언제든지 환영합니다!</p>
+        <div class="contact-row">
+          <a class="contact-btn btn-github" href="#">⬡ GitHub</a>
+          <a class="contact-btn btn-email" href="mailto:jimin@example.com">✉ 이메일 보내기</a>
+        </div>
+      </div>
+
+      <!-- 관심 분야 (전체 너비) -->
+      <div class="card card-full">
+        <div class="card-icon">🔍</div>
+        <h2><span class="dot"></span>관심 분야</h2>
+
+        <div class="interest-item">
+          <div class="interest-icon i-purple">🤖</div>
+          <div class="interest-info">
+            <strong>인공지능 · 머신러닝</strong>
+            <span>딥러닝 모델 구조와 자연어 처리(NLP)에 깊은 관심을 갖고 있습니다.
+            Transformer 아키텍처를 직접 구현해 보며 공부 중입니다.</span>
+          </div>
+        </div>
+
+        <div class="interest-item">
+          <div class="interest-icon i-blue">🌐</div>
+          <div class="interest-info">
+            <strong>웹 풀스택 개발</strong>
+            <span>React + Node.js 스택으로 사이드 프로젝트를 진행하며
+            사용자 경험을 개선하는 UI/UX 설계에도 관심이 많습니다.</span>
+          </div>
+        </div>
+
+        <div class="interest-item">
+          <div class="interest-icon i-green">🔐</div>
+          <div class="interest-info">
+            <strong>보안 · 시스템 프로그래밍</strong>
+            <span>CTF(Capture The Flag) 대회에 참가하며 네트워크 보안과
+            시스템 취약점 분석을 학습하고 있습니다.</span>
+          </div>
+        </div>
+
+        <div class="interest-item">
+          <div class="interest-icon i-orange">📱</div>
+          <div class="interest-info">
+            <strong>오픈소스 기여 · 커뮤니티</strong>
+            <span>GitHub에서 오픈소스 프로젝트에 기여하며 협업 경험을 쌓고 있습니다.
+            코드 리뷰와 문서 작성도 즐깁니다.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      <p>© 2026 김지민 · 컴퓨터공학과 3학년 · 열심히 성장하는 중 🌱</p>
+    </footer>
+
+  </div>
+</body>
+</html>
