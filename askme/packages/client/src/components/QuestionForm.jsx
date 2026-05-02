@@ -5,10 +5,19 @@ function QuestionForm({ onSubmit }) {
     const [submitting, setSubmitting] = useState(false);
     const [done, setDone] = useState(false);
 
+    const isOver = content.length > 300;
+
+    function handleChange(e) {
+        const value = e.target.value;
+        if (value.length <= 300) {
+            setContent(value);
+        }
+    }
+
     async function handleSubmit(e) {
         e.preventDefault();
-        if (!content.trim()) return;
-        
+        if (!content.trim() || isOver) return;
+
         setSubmitting(true);
         await onSubmit(content.trim());
         setContent('');
@@ -21,14 +30,18 @@ function QuestionForm({ onSubmit }) {
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-5 space-y-3">
             <textarea
                 value={content}
-                onChange={e => setContent(e.target.value)}
+                onChange={handleChange}
                 placeholder="익명으로 질문을 남겨보세요 (최대 300자)"
-                maxLength={300}
-                rows={4}
+                rows={6}
                 className="w-full resize-none border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
             />
             <div className="flex items-center justify-between">
-                <span className="text-xs text-gray-400">{content.length} / 300</span>
+                <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400">{content.length} / 300</span>
+                    {isOver && (
+                        <span className="text-xs text-red-500">300글자를 넘겼습니다!</span>
+                    )}
+                </div>
                 <button
                     type="submit"
                     disabled={submitting || !content.trim()}
