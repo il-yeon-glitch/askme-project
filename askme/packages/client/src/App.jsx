@@ -1,21 +1,18 @@
-import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import UserPage from './pages/UserPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
-  const [status, setStatus] = useState(null)
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((r) => r.json())
-      .then(setStatus)
-      .catch(() => setStatus({ ok: false }))
-  }, [])
-
-  return (
-    <div style={{ fontFamily: 'sans-serif', padding: '2rem' }}>
-      <h1>AskMe</h1>
-      <p>서버 상태: {status ? (status.ok ? '✅ 연결됨' : '❌ 오류') : '확인 중...'}</p>
-    </div>
-  )
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/:username" element={<UserPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
 
-export default App
+export default App;
