@@ -12,7 +12,7 @@ function UserPage() {
 
     async function fetchUserData() {
         try {
-            const res = await fetch(`/api/users/${username}`);
+            const res = await fetch(`/api/questions/${username}/answered`);
             if (!res.ok) {
                 setError('존재하지 않는 사용자입니다');
                 return;
@@ -54,14 +54,12 @@ function UserPage() {
         );
     }
 
-    const answered = questions.filter(q => q.isAnswered);
-
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
                 <OwnerHeader user={user} />
                 <QuestionForm onSubmit={submitQuestion} />
-                <QAList questions={answered} />
+                <QAList questions={questions} />
             </div>
         </div>
     );

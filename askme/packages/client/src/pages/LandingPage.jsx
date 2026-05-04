@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function LandingPage() {
+    const navigate = useNavigate();
     const [isLogin, setIsLogin] = useState(true);
+    const [error, setError] = useState('');
 
     // 로그인 state
     const [username, setUsername] = useState('');
@@ -13,23 +16,45 @@ function LandingPage() {
     const [signupPassword, setSignupPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    function handleLogin(e) {
+    async function handleLogin(e) {
         e.preventDefault();
-        console.log('로그인 시도:', { username, password });
+        setError('');
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setError(data.error); return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        navigate('/dashboard');
     }
 
     const passwordMismatch = passwordConfirm.length > 0 && signupPassword !== passwordConfirm;
 
-    function handleSignup(e) {
+    async function handleSignup(e) {
         e.preventDefault();
         if (passwordMismatch) return;
-        console.log('회원가입 시도:', { signupUsername, displayName, signupPassword, passwordConfirm });
+        setError('');
+        const res = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: signupUsername, password: signupPassword, displayName }),
+        });
+        const data = await res.json();
+        if (!res.ok) { setError(data.error); return; }
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        navigate('/dashboard');
     }
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="bg-white rounded-2xl shadow-md w-full max-w-sm p-8 space-y-6">
                 <h1 className="text-2xl font-bold text-center text-gray-800">AskMe</h1>
+
+                {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
                 {isLogin ? (
                     <form onSubmit={handleLogin} className="space-y-4">

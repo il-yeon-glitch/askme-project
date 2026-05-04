@@ -32,6 +32,41 @@ router.post('/', (req, res) => {
     res.status(201).json(question);
 });
 
+// 답변된 Q&A 조회
+router.get('/:username/answered', (req, res) => {
+    const { username } = req.params;
+
+    const user = db.prepare(
+        'SELECT id, username, display_name FROM users WHERE username = ?'
+    ).get(username);
+
+    if (!user) {
+        return res.status(404).json({ error: '존재하지 않는 사용자입니다' });
+    }
+
+    const questions = db.prepare(`
+        SELECT
+            q.id, q.content, q.created_at,
+            a.content AS answer_content, a.created_at AS answer_created_at
+        FROM questions q
+        JOIN answers a ON a.question_id = q.id
+        WHERE q.owner_id = ? AND q.is_answered = 1
+        ORDER BY q.created_at DESC
+    `).all(user.id);
+
+    const formatted = questions.map(q => ({
+        id: q.id,
+        content: q.content,
+        createdAt: q.created_at,
+        answer: { content: q.answer_content, createdAt: q.answer_created_at }
+    }));
+
+    res.json({
+        user: { id: user.id, username: user.username, displayName: user.display_name },
+        questions: formatted
+    });
+});
+
 // 공개 Q&A 조회
 router.get('/users/:username', (req, res) => {
     const { username } = req.params;
