@@ -4,12 +4,13 @@ import QuestionList from '../components/QuestionList';
 
 function DashboardPage() {
     const [filter, setFilter] = useState('all');
+    const [sort, setSort] = useState('latest');
     const [questions, setQuestions] = useState([]);
     const [copied, setCopied] = useState(false);
 
-    async function fetchQuestions() {
+    async function fetchQuestions(currentSort) {
         const token = localStorage.getItem('token');
-        const res = await fetch('/api/my/questions', {
+        const res = await fetch(`/api/my/questions?sort=${currentSort}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -17,8 +18,8 @@ function DashboardPage() {
     }
 
     useEffect(() => {
-        fetchQuestions();
-    }, []);
+        fetchQuestions(sort);
+    }, [sort]);
 
     const filtered = questions.filter(q => {
         if (filter === 'unanswered') return !q.isAnswered;
@@ -36,7 +37,7 @@ function DashboardPage() {
             },
             body: JSON.stringify({ content }),
         });
-        fetchQuestions();
+        fetchQuestions(sort);
     }
 
     function handleCopyLink() {
@@ -48,6 +49,28 @@ function DashboardPage() {
         });
     }
 
+    async function handleEditAnswer(id, content) {
+        const token = localStorage.getItem('token');
+        await fetch(`/api/my/questions/${id}/answer`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ content }),
+        });
+        fetchQuestions(sort);
+    }
+
+    async function handlePin(id) {
+        const token = localStorage.getItem('token');
+        await fetch(`/api/my/questions/${id}/pin`, {
+            method: 'PATCH',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        fetchQuestions(sort);
+    }
+
     async function handleDelete(id) {
         if (!window.confirm('질문을 삭제하시겠습니까?')) return;
         const token = localStorage.getItem('token');
@@ -55,7 +78,7 @@ function DashboardPage() {
             method: 'DELETE',
             headers: { Authorization: `Bearer ${token}` },
         });
-        fetchQuestions();
+        fetchQuestions(sort);
     }
 
     return (
@@ -75,8 +98,8 @@ function DashboardPage() {
                         복사되었습니다!
                     </div>
                 )}
-                <QuestionFilter filter={filter} onChange={setFilter} />
-                <QuestionList questions={filtered} onAnswer={handleAnswer} onDelete={handleDelete} />
+                <QuestionFilter filter={filter} onChange={setFilter} sort={sort} onSortChange={setSort} />
+                <QuestionList questions={filtered} onAnswer={handleAnswer} onDelete={handleDelete} onPin={handlePin} onEditAnswer={handleEditAnswer} />
             </div>
         </div>
     );

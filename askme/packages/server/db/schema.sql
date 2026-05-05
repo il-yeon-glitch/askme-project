@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS questions (
     owner_id    INTEGER  NOT NULL,
     content     TEXT     NOT NULL CHECK(length(content) <= 300),
     is_answered BOOLEAN  DEFAULT 0,
+    is_pinned   BOOLEAN  DEFAULT 0,
     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
 );
