@@ -48,7 +48,7 @@ router.get('/:username/answered', (req, res) => {
 
     const questions = db.prepare(`
         SELECT
-            q.id, q.content, q.is_pinned, q.created_at,
+            q.id, q.content, q.is_pinned, q.like_count, q.created_at,
             a.content AS answer_content, a.created_at AS answer_created_at
         FROM questions q
         JOIN answers a ON a.question_id = q.id
@@ -60,6 +60,7 @@ router.get('/:username/answered', (req, res) => {
         id: q.id,
         content: q.content,
         isPinned: Boolean(q.is_pinned),
+        likeCount: q.like_count,
         createdAt: q.created_at,
         answer: { content: q.answer_content, createdAt: q.answer_created_at }
     }));
@@ -110,6 +111,21 @@ router.get('/users/:username', (req, res) => {
         user: { id: user.id, username: user.username, displayName: user.display_name },
         questions: formatted
     });
+});
+
+// 좋아요
+router.post('/:id/like', (req, res) => {
+    const { id } = req.params;
+
+    const question = db.prepare('SELECT id, like_count FROM questions WHERE id = ?').get(id);
+    if (!question) {
+        return res.status(404).json({ error: '존재하지 않는 질문입니다' });
+    }
+
+    db.prepare('UPDATE questions SET like_count = like_count + 1 WHERE id = ?').run(id);
+
+    const updated = db.prepare('SELECT like_count FROM questions WHERE id = ?').get(id);
+    res.json({ likeCount: updated.like_count });
 });
 
 module.exports = router;

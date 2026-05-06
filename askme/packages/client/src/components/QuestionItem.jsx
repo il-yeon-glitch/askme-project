@@ -51,6 +51,7 @@ function QuestionItem({ question, onAnswer, onDelete, onPin, onEditAnswer }) {
                             답변하기
                         </button>
                     )}
+
                     <button
                         onClick={() => onDelete(question.id)}
                         className="text-xs px-3 py-1 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 transition"

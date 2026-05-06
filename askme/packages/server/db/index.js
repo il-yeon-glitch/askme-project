@@ -18,4 +18,10 @@ db.pragma('foreign_keys = ON');
 const schema = fs.readFileSync(SCHEMA_PATH, 'utf-8');
 db.exec(schema);
 
+// 기존 DB에 like_count 컬럼이 없으면 추가
+const cols = db.pragma('table_info(questions)').map(c => c.name);
+if (!cols.includes('like_count')) {
+    db.exec('ALTER TABLE questions ADD COLUMN like_count INTEGER DEFAULT 0');
+}
+
 module.exports = db;
