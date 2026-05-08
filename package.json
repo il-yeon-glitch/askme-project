@@ -1,0 +1,8 @@
+{
+  "name": "askme-project",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "cd askme && npm install && npm run build",
+    "start": "cd askme && npm start"
+  }
+}
