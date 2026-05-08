@@ -32,11 +32,12 @@ function UserPage() {
     }
 
     async function submitQuestion(content) {
-        await fetch('/api/questions', {
+        const res = await fetch('/api/questions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ content, ownerId: user.id }),
         });
+        if (!res.ok) throw new Error('질문 전송 실패');
         fetchUserData(sort);
     }
 
